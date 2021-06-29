@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -24,6 +26,8 @@ public class TimelineActivity extends AppCompatActivity {
 
     TwitterClient client;
     RecyclerView rvTweets;
+    Button btnLogOut;
+
     List<Tweet> tweets;
     TweetsAdapter adapter;
 
@@ -36,12 +40,21 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
+        btnLogOut = findViewById(R.id.btnLogOut);
         //Init the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         //Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.clearAccessToken(); // forget who's logged in
+                finish(); // navigate backwards to Login screen
+            }
+        });
 
         populateHomeTimeline();
     }
