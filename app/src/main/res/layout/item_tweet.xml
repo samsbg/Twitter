@@ -28,6 +28,14 @@
         tools:text="rpandey1234" />
 
     <TextView
+        android:id="@+id/dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        android:text=" ∙ " />
+
+    <TextView
         android:id="@+id/tvBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,18 +46,11 @@
         tools:text="This is my tweet" />
 
     <TextView
-        android:id="@+id/dot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_toEndOf="@+id/tvScreenName"
-        android:text=" ∙ " />
-
-    <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_toEndOf="@+id/dot"
         tools:text="8h" />
+
 </RelativeLayout>
