@@ -20,7 +20,7 @@
         android:gravity="start"
         app:boxStrokeColor="#FFFFFF"
         app:counterEnabled="true"
-        app:counterMaxLength="140"
+        app:counterMaxLength="280"
         app:helperTextTextColor="#FFFFFF">
 
         <EditText

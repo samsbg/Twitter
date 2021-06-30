@@ -27,14 +27,16 @@ import java.util.List;
 
 import okhttp3.Headers;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
+    private SwipeRefreshLayout swipeContainer;
 
     TwitterClient client;
     RecyclerView rvTweets;
-    Button btnLogOut;
 
     List<Tweet> tweets;
     TweetsAdapter adapter;
@@ -48,7 +50,6 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
-        btnLogOut = findViewById(R.id.btnLogOut);
         //Init the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
@@ -56,15 +57,59 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
+        populateHomeTimeline();
+
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                client.clearAccessToken(); // forget who's logged in
-                finish(); // navigate backwards to Login screen
+            public void onRefresh() {
+                Log.i("TimeLineActivity", "OnRefresh");
+                // Your code to refresh the list here.
+                //populateHomeTimeline();
+                // Make sure you call swipeContainer.setRefreshing(false)
+                swipeContainer.setRefreshing(false);
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
             }
         });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
-        populateHomeTimeline();
+    }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i("TimeLineActivity", "OnSuccess");
+                // Remember to CLEAR OUT old items before appending in the new ones
+                adapter.clear();
+                // ...the data has come back, add new items to your adapter...
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Log.e(TAG, "Json exception", e);
+                }
+
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable e) {
+                Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+            }
+        });
     }
 
     // Inflate the menu; this adds items to the action bar if it is present.
@@ -81,6 +126,11 @@ public class TimelineActivity extends AppCompatActivity {
             //Navigate the compose activity
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent, REQUEST_CODE);
+            return true;
+        }
+        if (item.getItemId() == R.id.optLogOut) {
+            client.clearAccessToken(); // forget who's logged in
+            finish(); // navigate backwards to Login screen
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -105,7 +155,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess " + json.toString());
+                //Log.i(TAG, "onSuccess " + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));

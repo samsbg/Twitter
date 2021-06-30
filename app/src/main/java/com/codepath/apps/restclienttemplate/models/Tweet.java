@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String date;
+    public String url;
 
     //Empty constructor used by the parceler library
     public Tweet() {}
@@ -25,6 +28,16 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.date = jsonObject.getString("created_at");
+        try {
+            tweet.url = jsonObject.getJSONObject("entities")
+                    .getJSONArray("media")
+                    .getJSONObject(0)
+                    .getString("media_url_https");
+        } catch (JSONException e) {
+            Log.d("Tweet", e.toString());
+            tweet.url = "";
+            Log.d("Tweet", "No video");
+        }
         return tweet;
     }
 

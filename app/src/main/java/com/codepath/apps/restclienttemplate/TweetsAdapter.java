@@ -22,6 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     private static final int SECOND_MILLIS = 1000;
@@ -55,6 +58,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         //Bind the tweet with the view holder
         holder.bind(tweet);
+    }
+
+    // Clean all elements of the recycler
+    public void clear() {
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Tweet> list) {
+        tweets.addAll(list);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -98,6 +113,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivProfileImage;
+        ImageView ivMedia;
         TextView tvBody;
         TextView tvScreenName;
         TextView tvDate;
@@ -105,6 +121,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         public ViewHolder(@NotNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivMedia = itemView.findViewById(R.id.ivMedia);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvDate = itemView.findViewById(R.id.tvDate);
@@ -116,6 +133,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvDate.setText(getRelativeTimeAgo(tweet.date));
             //Log.d("RelativeDate", getRelativeTimeAgo(tweet.date));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            if (!tweet.url.isEmpty()) {
+                Log.d("Glide", tweet.user.screenName + " " + tweet.url);
+                Glide.with(context).load(tweet.url).into(ivMedia);
+                ivMedia.setVisibility(VISIBLE);
+            } else {
+                ivMedia.setVisibility(GONE);
+            }
         }
 
     }
