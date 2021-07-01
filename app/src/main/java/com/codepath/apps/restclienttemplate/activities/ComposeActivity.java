@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -17,6 +20,8 @@ import org.json.JSONException;
 import org.parceler.Parcels;
 
 import okhttp3.Headers;
+
+import static com.codepath.apps.restclienttemplate.activities.TimelineActivity.SCREEN_NAME;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -37,6 +42,10 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+
+        if(getIntent().getStringExtra(SCREEN_NAME) != null) {
+            etCompose.setText("@" + getIntent().getStringExtra(SCREEN_NAME));
+        }
 
         //Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {

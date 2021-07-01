@@ -12,9 +12,17 @@
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:textStyle="bold"
+        android:text="asdfg" />
 
     <TextView
         android:id="@+id/tvScreenName"
@@ -22,16 +30,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:textStyle="bold"
+        android:layout_toEndOf="@+id/tvName"
         tools:text="rpandey1234" />
 
     <TextView
         android:id="@+id/dot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
         android:layout_toEndOf="@+id/tvScreenName"
         android:text=" ∙ " />
 
@@ -49,23 +54,59 @@
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
         android:layout_toEndOf="@+id/dot"
         tools:text="8h" />
 
     <ImageView
         android:id="@+id/ivMedia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="314dp"
+        android:layout_height="158dp"
         android:layout_below="@+id/tvBody"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:visibility="gone"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:visibility="gone"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <ImageView
+        android:id="@+id/ivReply"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivMedia"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/ivProfileImage"
+        android:background="@null"
+        app:tint="#969696"
+        app:srcCompat="@drawable/reply" />
+
+    <ImageButton
+        android:id="@+id/ibRetweet"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivMedia"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/ivReply"
+        android:background="#FFFFFF"
+        android:tint="#969696"
+        app:srcCompat="@drawable/ic_vector_retweet_stroke" />
+
+    <ImageButton
+        android:id="@+id/ibLike"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivMedia"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/ibRetweet"
+        android:background="#FFFFFF"
+        android:tint="#969696"
+        app:srcCompat="@drawable/ic_vector_heart_stroke" />
+
 
 </RelativeLayout>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:counterEnabled="true"
     app:counterMaxLength="140"
-    tools:context=".ComposeActivity">
+    tools:context=".activities.ComposeActivity">
 
 
     <com.google.android.material.textfield.TextInputLayout

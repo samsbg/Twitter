@@ -4,11 +4,19 @@
 
     <item
         android:id="@+id/compose"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/vector_compose_fab"
         android:title="Compose"
         app:showAsAction="always" />
     <item
         android:id="@+id/optLogOut"
         android:title="Log Out"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="Loading..."
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_progress" />
 </menu>

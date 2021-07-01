@@ -1,7 +1,6 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,14 +33,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
+    public interface OnClickListener {
+        void onItemClicked(User user);
+    }
+
     Context context;
     List<Tweet> tweets;
+    OnClickListener onClickListener;
 
     //Pass in the context and list of tweets
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<Tweet> tweets, OnClickListener onClickListener) {
         super();
         this.context = context;
         this.tweets = tweets;
+        this.onClickListener = onClickListener;
     }
 
     //For each row inflate de layout
@@ -116,7 +123,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivMedia;
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvName;
         TextView tvDate;
+        ImageView ivReply;
 
         public ViewHolder(@NotNull View itemView) {
             super(itemView);
@@ -124,15 +133,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvName = itemView.findViewById(R.id.tvName);
             tvDate = itemView.findViewById(R.id.tvDate);
+            ivReply = itemView.findViewById(R.id.ivReply);
         }
 
-        public void bind(Tweet tweet) {
+        public void bind(final Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            tvName.setText(tweet.user.name);
             tvDate.setText(getRelativeTimeAgo(tweet.date));
             //Log.d("RelativeDate", getRelativeTimeAgo(tweet.date));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+
             if (!tweet.url.isEmpty()) {
                 Log.d("Glide", tweet.user.screenName + " " + tweet.url);
                 Glide.with(context).load(tweet.url).into(ivMedia);
@@ -140,6 +153,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             } else {
                 ivMedia.setVisibility(GONE);
             }
+
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.onItemClicked(tweet.user);
+                }
+            });
         }
 
     }

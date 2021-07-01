@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,15 +7,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -32,8 +34,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
+    public static final String SCREEN_NAME = "screenName";
     private final int REQUEST_CODE = 20;
+    private final int CHECK_DETAIL = 20;
     private SwipeRefreshLayout swipeContainer;
+
+    private ActivityTimelineBinding binding;
+    MenuItem miActionProgressItem;
 
     TwitterClient client;
     RecyclerView rvTweets;
@@ -44,15 +51,28 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityTimelineBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_timeline);
 
+        showProgressBar();
+
         client = TwitterApp.getRestClient(this);
+
+        TweetsAdapter.OnClickListener onClickListener = new TweetsAdapter.OnClickListener() {
+            @Override
+            public void onItemClicked(User user) {
+                Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+                i.putExtra(SCREEN_NAME, user.screenName);
+
+                startActivityForResult(i, CHECK_DETAIL);
+            }
+        };
 
         // Find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
         //Init the list of tweets and adapter
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, onClickListener);
         //Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
@@ -79,6 +99,8 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        hideProgressBar();
 
     }
 
@@ -112,11 +134,21 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+
     // Inflate the menu; this adds items to the action bar if it is present.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -134,6 +166,20 @@ public class TimelineActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        if(miActionProgressItem != null) {
+            miActionProgressItem.setVisible(true);
+        }
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        if(miActionProgressItem != null) {
+            miActionProgressItem.setVisible(false);
+        }
     }
 
     @Override
