@@ -41,7 +41,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     List<Tweet> tweets;
     OnClickListener onClickListener;
 
-    //Pass in the context and list of tweets
     public TweetsAdapter(Context context, List<Tweet> tweets, OnClickListener onClickListener) {
         super();
         this.context = context;
@@ -49,7 +48,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         this.onClickListener = onClickListener;
     }
 
-    //For each row inflate de layout
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,23 +55,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    //Bind values based on the position of the element
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //Get the data at position
         Tweet tweet = tweets.get(position);
-
-        //Bind the tweet with the view holder
         holder.bind(tweet);
     }
 
-    // Clean all elements of the recycler
     public void clear() {
         tweets.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
         notifyDataSetChanged();
@@ -110,7 +102,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 return diff / DAY_MILLIS + "d";
             }
         } catch (ParseException e) {
-            Log.i("TweetsAdapter", "getRelativeTimeAgo failed");
+            Log.e("TweetsAdapter", "getRelativeTimeAgo failed");
             e.printStackTrace();
         }
 
@@ -139,16 +131,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
         public void bind(final Tweet tweet) {
-            tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
-            tvName.setText(tweet.user.name);
-            tvDate.setText(getRelativeTimeAgo(tweet.date));
-            //Log.d("RelativeDate", getRelativeTimeAgo(tweet.date));
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            tvBody.setText(tweet.getBody());
+            tvScreenName.setText(tweet.getUser().getScreenName());
+            tvName.setText(tweet.getUser().getName());
+            tvDate.setText(getRelativeTimeAgo(tweet.getDate()));
+            Glide.with(context).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
 
-            if (!tweet.url.isEmpty()) {
-                Log.d("Glide", tweet.user.screenName + " " + tweet.url);
-                Glide.with(context).load(tweet.url).into(ivMedia);
+            if (!tweet.getUrl().isEmpty()) {
+                Glide.with(context).load(tweet.getUrl()).into(ivMedia);
                 ivMedia.setVisibility(VISIBLE);
             } else {
                 ivMedia.setVisibility(GONE);
@@ -157,7 +147,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickListener.onItemClicked(tweet.user);
+                    onClickListener.onItemClicked(tweet.getUser());
                 }
             });
         }

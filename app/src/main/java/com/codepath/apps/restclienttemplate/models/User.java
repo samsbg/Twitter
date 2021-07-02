@@ -7,9 +7,9 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
 
-    public String name;
-    public String screenName;
-    public String profileImageUrl;
+    private String name;
+    private String screenName;
+    private String profileImageUrl;
 
     //Empty constructor used by the parceler library
     public User() {}
@@ -20,5 +20,17 @@ public class User {
         user.screenName = jsonObject.getString("screen_name");
         user.profileImageUrl = jsonObject.getString("profile_image_url_https");
         return user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

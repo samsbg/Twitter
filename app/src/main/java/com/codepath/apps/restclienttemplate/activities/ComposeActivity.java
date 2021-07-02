@@ -47,28 +47,28 @@ public class ComposeActivity extends AppCompatActivity {
             etCompose.setText("@" + getIntent().getStringExtra(SCREEN_NAME));
         }
 
-        //Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String tweetContent = etCompose.getText().toString();
+
                 if (tweetContent.isEmpty()) {
                     Toast.makeText(ComposeActivity.this, "Sorry, your tweet cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (tweetContent.length() > MAX_TWEET_LENGTH) {
+                else if (tweetContent.length() > MAX_TWEET_LENGTH) {
                     Toast.makeText(ComposeActivity.this, "Sorry, your tweet is too long", Toast.LENGTH_SHORT).show();
                     return;
+                } else {
+                    Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
-                //Make an API call to Twitter to publish the tweet
+
                 client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "onSuccess to publish tweet");
                         try {
                             Tweet tweet = Tweet.fromJson(json.jsonObject);
-                            Log.i(TAG, "Published tweet says: " + tweet.body);
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet));
                             setResult(RESULT_OK, intent);

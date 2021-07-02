@@ -7,15 +7,11 @@ import androidx.room.Room;
 
 import com.facebook.stetho.Stetho;
 
-/*
- * This is the Android application itself and is used to configure various settings
- * including the image cache in memory and on disk. This also adds a singleton
- * for accessing the relevant rest client.
- *
- *     RestClient client = RestApplication.getRestClient(Context context);
- *     // use client to send requests to API
- *
- */
+
+ // This is the Android application itself and is used to configure various settings
+ // including the image cache in memory and on disk. This also adds a singleton
+ // for accessing the relevant rest client.
+
 public class TwitterApp extends Application {
 
     MyDatabase myDatabase;
@@ -23,12 +19,7 @@ public class TwitterApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // when upgrading versions, kill the original tables by using
-		// fallbackToDestructiveMigration()
-        myDatabase = Room.databaseBuilder(this, MyDatabase.class,
-                MyDatabase.NAME).fallbackToDestructiveMigration().build();
-
-        // use chrome://inspect to inspect your SQL database
+        myDatabase = Room.databaseBuilder(this, MyDatabase.class, MyDatabase.NAME).fallbackToDestructiveMigration().build();
         Stetho.initializeWithDefaults(this);
     }
 
