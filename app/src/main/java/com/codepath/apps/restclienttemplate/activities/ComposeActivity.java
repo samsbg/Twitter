@@ -44,7 +44,7 @@ public class ComposeActivity extends AppCompatActivity {
         btnTweet = findViewById(R.id.btnTweet);
 
         if(getIntent().getStringExtra(SCREEN_NAME) != null) {
-            etCompose.setText("@" + getIntent().getStringExtra(SCREEN_NAME));
+            etCompose.setText("RT @" + getIntent().getStringExtra(SCREEN_NAME) + " ");
         }
 
         btnTweet.setOnClickListener(new View.OnClickListener() {
